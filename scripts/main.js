@@ -4,8 +4,11 @@ const title = document.getElementById("title");
 const time = document.getElementById("time");
 const date = document.getElementById("date");
 const description = document.getElementById("description");
+const today = new Date().getFullYear()+"-"+((new Date().getMonth()+1)<10?"0"+(new Date().getMonth()+1):new Date().getMonth()+1)+"-"+((new Date().getDate()+1)<10?"0"+new Date().getDate():new Date().getDate());
 
 document.addEventListener("DOMContentLoaded", () => {
+  date.value = today;
+
   addEventForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -13,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     title.value = "";
     time.value = "";
-    date.value = "";
+    date.value = today;
     description.value = "";
   });
 });
