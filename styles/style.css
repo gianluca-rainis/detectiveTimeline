@@ -31,6 +31,16 @@ form section {
     flex-direction: column;
 }
 
+#mobileMenuButton {
+    display: none;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    align-self: center;
+    right: 10%;
+    position: fixed;
+}
+
 input {
     padding: 5px;
     border: 0;
@@ -56,6 +66,10 @@ input {
     color: whitesmoke;
 }
 
+.description {
+    margin-right: 40px;
+}
+
 .delete {
     width: 20px;
     height: 20px;
@@ -75,5 +89,16 @@ input {
 @media screen and (max-width: 740px) {
     form {
         flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .event {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .description {
+        margin-right: 0;
     }
 }
