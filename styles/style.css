@@ -11,6 +11,13 @@ header {
     position: sticky;
     background-color: #7c3f00;
     padding: 10px;
+    display: flex;
+}
+
+#logo {
+    height: 100px;
+    width: auto;
+    margin: 10px;
 }
 
 form {
@@ -40,7 +47,7 @@ input {
 }
 
 .event {
-    background-color: #9e524a;
+    background-color: #ad7e56;
     border-radius: 10px;
     margin: 30px;
     display: flex;
