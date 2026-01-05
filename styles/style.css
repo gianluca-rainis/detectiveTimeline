@@ -1,0 +1,56 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-color: beige;
+}
+
+header {
+    position: sticky;
+    background-color: bisque;
+    padding: 10px;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+form section {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    padding: 5px;
+    border: 0;
+    background-color: salmon;
+    border-radius: 10px;
+    color: whitesmoke;
+    margin: 10px;
+}
+
+#submit {
+    width: 90px;
+    height: 50%;
+    cursor: pointer;
+}
+
+.event {
+    background-color: salmon;
+    border-radius: 10px;
+    margin: 30px;
+    display: flex;
+    gap: 30px;
+    padding: 15px;
+    color: whitesmoke;
+}
+
+@media screen and (max-width: 650px) {
+    form {
+        flex-direction: column;
+    }
+}
