@@ -56,7 +56,23 @@ input {
     color: whitesmoke;
 }
 
-@media screen and (max-width: 650px) {
+.delete {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    position: absolute;
+    right: 50px;
+    padding: 3px;
+    border: 0;
+    border-radius: 5px;
+    align-self: center;
+}
+
+.delete:hover {
+    background-color: #876343;
+}
+
+@media screen and (max-width: 740px) {
     form {
         flex-direction: column;
     }

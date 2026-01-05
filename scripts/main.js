@@ -39,21 +39,31 @@ function GetEvent(title, time, date, description) {
   descriptionToInsert.classList = "description";
   descriptionToInsert.innerHTML = description;
 
+  const deleteInsert = document.createElement("img");
+  deleteInsert.className = "delete";
+  deleteInsert.src = "./images/delete.png";
+
   event.appendChild(dateToInsert);
   event.appendChild(titleToInsert);
   event.appendChild(descriptionToInsert);
+  event.appendChild(deleteInsert);
+
+  deleteInsert.addEventListener("click", () => {
+    event.remove();
+  });
   
   return event;
   
-  /* <div className='event'>
+  /* <div class='event'>
     <p className='date'>
       {date} - {time}
     </p>
-    <h3 className='title'>
+    <h3 class='title'>
       {title}
     </h3>
-    <p className='description'>
+    <p class='description'>
       {description}
     </p>
+    <img src="./images/delete.png" class="delete" />
   </div> */
 }
