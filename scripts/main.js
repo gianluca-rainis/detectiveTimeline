@@ -5,8 +5,10 @@ const time = document.getElementById("time");
 const date = document.getElementById("date");
 const description = document.getElementById("description");
 const today = new Date().getFullYear()+"-"+((new Date().getMonth()+1)<10?"0"+(new Date().getMonth()+1):new Date().getMonth()+1)+"-"+((new Date().getDate()+1)<10?"0"+new Date().getDate():new Date().getDate());
+const now = (new Date().getHours()<10?"0"+new Date().getHours():new Date().getHours())+":"+(new Date().getMinutes()<10?"0"+new Date().getMinutes():new Date().getMinutes());
 
 document.addEventListener("DOMContentLoaded", () => {
+  time.value = now;
   date.value = today;
 
   addEventForm.addEventListener("submit", (e) => {
@@ -15,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     main.appendChild(GetEvent(title.value, time.value, date.value, description.value));
 
     title.value = "";
-    time.value = "";
+    time.value = now;
     date.value = today;
     description.value = "";
   });

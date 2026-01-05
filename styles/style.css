@@ -4,12 +4,12 @@
 }
 
 body {
-    background-color: beige;
+    background-color: #3e1c00;
 }
 
 header {
     position: sticky;
-    background-color: bisque;
+    background-color: #7c3f00;
     padding: 10px;
 }
 
@@ -27,7 +27,7 @@ form section {
 input {
     padding: 5px;
     border: 0;
-    background-color: salmon;
+    background-color: #ad7e56;
     border-radius: 10px;
     color: whitesmoke;
     margin: 10px;
@@ -40,7 +40,7 @@ input {
 }
 
 .event {
-    background-color: salmon;
+    background-color: #9e524a;
     border-radius: 10px;
     margin: 30px;
     display: flex;
