@@ -9,6 +9,8 @@ body {
 
 header {
     position: sticky;
+    top: 0;
+    z-index: 100;
     background-color: #7c3f00;
     padding: 10px;
     display: flex;
@@ -48,6 +50,10 @@ input {
     border-radius: 10px;
     color: whitesmoke;
     margin: 10px;
+}
+
+label {
+    text-align: center;
 }
 
 #submit {
