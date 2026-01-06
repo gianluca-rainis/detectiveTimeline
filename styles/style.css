@@ -53,14 +53,17 @@ form section {
     border-radius: 10px;
 }
 
-#loginForm, #createAccountForm {
-    flex-direction: column;
+#loginCreateAccountSection {
     position: absolute;
     right: 1px;
     top: 145px;
     background-color: #7c3f00;
     border: 0;
     border-radius: 10px;
+}
+
+#loginForm, #createAccountForm {
+    flex-direction: column;
     padding: 10px;
 }
 

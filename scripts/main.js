@@ -1,7 +1,11 @@
 const header = document.querySelector("header");
 const main = document.querySelector("main");
 const addEventForm = document.getElementById("addEventForm");
+const loginCreateAccountSection = document.getElementById("loginCreateAccountSection");
+const loginForm = document.getElementById("loginForm");
+const createAccountForm = document.getElementById("createAccountForm");
 const mobileMenuButton = document.getElementById("mobileMenuButton");
+const loginButton = document.getElementById("loginButton");
 const title = document.getElementById("title");
 const time = document.getElementById("time");
 const date = document.getElementById("date");
@@ -30,12 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
     orderTimeline(); // Order the events in chronological order
   });
 
+  loginButton.addEventListener("click", toggleLoginSection); // Event listener for the login section
   mobileMenuButton.addEventListener("click", toggleMobileMenu); // Event listener for the mobile menu
-
-  // Event listener for the login button
-  document.getElementById("loginButton").addEventListener("click", () => {
-    document.getElementById("loginForm").style.display = "none";
-  });
 });
 
 // Return a new event block with the given informations
@@ -119,6 +119,18 @@ function orderTimeline() {
       deleteButton.closest(".event").remove();
     });
   });
+}
+
+// Toggle login section
+function toggleLoginSection() {
+  isLoginShowed = !isLoginShowed;
+
+  if (isLoginShowed) {
+    loginCreateAccountSection.style.display = "block";
+  }
+  else {
+    loginCreateAccountSection.style.display = "none";
+  }
 }
 
 // Toggle the mobile menu (show/hide)
