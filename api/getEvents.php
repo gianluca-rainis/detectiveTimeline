@@ -16,6 +16,10 @@
 
     try {
         if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_SESSION['id']) && !empty($_SESSION['id'])) {
+            if (!isset($_POST['timelineId']) || empty($_POST['timelineId'])) {
+                throw new Exception("Timeline ID is required.");
+            }
+
             $timelineId = getInput($_POST['timelineId']);
 
             // Verify that the timeline exists and that the user is its owner

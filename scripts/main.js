@@ -188,6 +188,10 @@ async function getSessionData() {
 
 async function getEvents() {
   try {
+    if (!id) {
+      throw new Error("Timeline ID is missing from URL.");
+    }
+
     const formData = new FormData();
     formData.append("timelineId", id);
 
