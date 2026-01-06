@@ -33,7 +33,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (eventsSaved && eventsSaved.length != 0) {
     eventsSaved.forEach(event => {
-      main.appendChild(GetEvent(event.title, event.date.split(" ")[1].split(":")[0]+":"+event.date.split(" ")[1].split(":")[1], event.date.split(" ")[0], event.description));
+      const hourMinAndSecArray = event.date.split(" ")[1].split(":"); // [hh, mm, ss]
+      const timeStr = hourMinAndSecArray[0] + ":" + hourMinAndSecArray[1]; // hh:mm
+      const dateStr = event.date.split(" ")[0];
+
+      main.appendChild(GetEvent(event.id, event.title, timeStr, dateStr, event.description));
     });
 
     orderTimeline();
@@ -45,7 +49,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const createdEvent = await createEvent(title.value, time.value, date.value, description.value);
 
     if (createdEvent) {
-      main.appendChild(GetEvent(createdEvent.title, createdEvent.date.split(" ")[1].split(":")[0]+":"+createdEvent.date.split(" ")[1].split(":")[1], createdEvent.date.split(" ")[0], createdEvent.description)); // Insert in the bottom of the main the event
+      const hourMinAndSecArray = createdEvent.date.split(" ")[1].split(":"); // [hh, mm, ss]
+      const timeStr = hourMinAndSecArray[0] + ":" + hourMinAndSecArray[1]; // hh:mm
+      const dateStr = createdEvent.date.split(" ")[0];
+
+      main.appendChild(GetEvent(createdEvent.id, createdEvent.title, timeStr, dateStr, createdEvent.description)); // Insert in the bottom of the main the event
 
       // Reset the values of the inputs
       title.value = "";
@@ -235,9 +243,10 @@ async function createEvent(title, time, date, description) {
 }
 
 // Return a new event block with the given informations
-function GetEvent(title, time, date, description) {
+function GetEvent(idEvent, title, time, date, description) {
   const event = document.createElement("div"); // Create the event container
   event.classList = "event";
+  event.dataset.eventId = idEvent;
 
   const dateToInsert = document.createElement("p"); // Add date
   dateToInsert.classList = "date";
@@ -260,15 +269,20 @@ function GetEvent(title, time, date, description) {
   event.appendChild(descriptionToInsert);
   event.appendChild(deleteInsert);
 
-  deleteInsert.addEventListener("click", () => { // Handle the delete button click
-    event.remove();
+  deleteInsert.addEventListener("click", async () => { // Handle the delete button click
+    const eventId = event.dataset.eventId;
+    const idDeletedTheEvent = await deleteEvent(eventId);
+
+    if (idDeletedTheEvent) {
+      event.remove();
+    }
   });
   
   return event;
   
   /* The returned structure
 
-  <div class='event'>
+  <div class='event' data-eventId={id}>
     <p className='date'>
       {date} | {time}
     </p>
@@ -280,6 +294,31 @@ function GetEvent(title, time, date, description) {
     </p>
     <img src="./images/delete.png" class="delete" />
   </div> */
+}
+
+async function deleteEvent(eventId) {
+  try {
+    const formData = new FormData();
+    formData.append("eventId", eventId);
+
+    const response = await fetch("/api/deleteEvent.php", {
+      method: "POST",
+      credentials: "include",
+      body: formData
+    });
+
+    const result = await response.json();
+
+    if (result && result.success) {
+      return true;
+    }
+    else {
+      throw new Error(result.error);
+    }
+  } catch (error) {
+    console.error("Error: " + error.message);
+    return false;
+  }
 }
 
 // Order the events in chronological order
@@ -311,8 +350,14 @@ function orderTimeline() {
   const deleteButtons = document.querySelectorAll(".delete");
 
   deleteButtons.forEach(deleteButton => {
-    deleteButton.addEventListener("click", () => {
-      deleteButton.closest(".event").remove();
+    deleteButton.addEventListener("click", async () => {
+      const event = deleteButton.closest(".event");
+      const eventId = event.dataset.eventId;
+      const idDeletedTheEvent = await deleteEvent(eventId);
+
+      if (idDeletedTheEvent) {
+        event.remove();
+      }
     });
   });
 }
