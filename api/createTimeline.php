@@ -5,6 +5,10 @@
 
     session_start();
 
+    function getInput($data) {
+        return trim(htmlspecialchars($data));
+    }
+
     try {
         if ($_SERVER['REQUEST_METHOD'] !== "POST") {
             throw new Exception("Invalid request method.");
@@ -42,8 +46,4 @@
     }
 
     exit;
-
-    function getInput($data) {
-        return trim(htmlspecialchars($data));
-    }
 ?>

@@ -25,6 +25,9 @@
 
             echo json_encode(['success' => true, 'data' => $timelines]);
         }
+        else {
+            echo json_encode(['success' => true, 'data' => []]);
+        }
     } catch (\Throwable $th) {
         echo json_encode(['success' => false, 'error' => strval($th)]);
     }
