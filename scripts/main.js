@@ -22,14 +22,14 @@ let isMobileMenuShowed = false; // If is open the mobile menu
 let isLoginShowed = false; // If is open the login menu
 
 document.addEventListener("DOMContentLoaded", async () => {
-  if (window.location.href.includes("timeline")) {
+  if (window.location.href.includes("timeline.php")) {
     addTimelineForm.style.display = "none";
   }
 
   time.value = now;
   date.value = today;
 
-  if (window.location.href.includes("timeline")) {
+  if (window.location.href.includes("timeline.php")) {
     const eventsSaved = await getEvents();
 
     if (eventsSaved && eventsSaved.length != 0) {
