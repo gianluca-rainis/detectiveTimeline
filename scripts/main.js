@@ -14,10 +14,14 @@ const description = document.getElementById("description");
 const today = new Date().getFullYear()+"-"+((new Date().getMonth()+1)<10?"0"+(new Date().getMonth()+1):new Date().getMonth()+1)+"-"+((new Date().getDate()+1)<10?"0"+new Date().getDate():new Date().getDate());
 const now = (new Date().getHours()<10?"0"+new Date().getHours():new Date().getHours())+":"+(new Date().getMinutes()<10?"0"+new Date().getMinutes():new Date().getMinutes());
 
+const paramsURL = new URLSearchParams(window.location.search); // The params passed with the url
+const id = paramsURL.get("id"); // The id of the page to load
+
+let sessionData = null; // Session data
 let isMobileMenuShowed = false; // If is open the mobile menu
 let isLoginShowed = false; // If is open the login menu
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   if (window.location.href.includes("timeline")) {
     addTimelineForm.style.display = "none";
   }
@@ -25,18 +29,32 @@ document.addEventListener("DOMContentLoaded", () => {
   time.value = now;
   date.value = today;
 
-  addEventForm.addEventListener("submit", (e) => { // When added a new event
+  const eventsSaved = await getEvents();
+
+  if (eventsSaved && eventsSaved.length != 0) {
+    eventsSaved.forEach(event => {
+      main.appendChild(GetEvent(event.title, event.date.split(" ")[1].split(":")[0]+":"+event.date.split(" ")[1].split(":")[1], event.date.split(" ")[0], event.description));
+    });
+
+    orderTimeline();
+  }
+
+  addEventForm.addEventListener("submit", async (e) => { // When added a new event
     e.preventDefault();
 
-    main.appendChild(GetEvent(title.value, time.value, date.value, description.value)); // Insert in the bottom of the main the event
+    const createdEvent = await createEvent(title.value, time.value, date.value, description.value);
 
-    // Reset the values of the inputs
-    title.value = "";
-    time.value = now;
-    date.value = today;
-    description.value = "";
+    if (createdEvent) {
+      main.appendChild(GetEvent(createdEvent.title, createdEvent.date.split(" ")[1].split(":")[0]+":"+createdEvent.date.split(" ")[1].split(":")[1], createdEvent.date.split(" ")[0], createdEvent.description)); // Insert in the bottom of the main the event
 
-    orderTimeline(); // Order the events in chronological order
+      // Reset the values of the inputs
+      title.value = "";
+      time.value = now;
+      date.value = today;
+      description.value = "";
+
+      orderTimeline(); // Order the events in chronological order
+    }
   });
 
   loginButton.addEventListener("click", async () => { // Event listener for the login section
@@ -49,11 +67,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
         window.location.href = "/index.php";
       } catch (error) {
-        alert("Error: " + error.message);
+        console.error("Error: " + error.message);
       }
     }
     else {
       toggleLoginSection();
+      
+      // Close mobile timeline menu if open
+      if (addTimelineForm.style.display === "flex" && window.innerWidth <= 850) {
+        addTimelineForm.style.display = "none";
+        header.style.flexDirection = "row";
+      }
     }
   });
 
@@ -94,10 +118,10 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "/index.php";
       }
       else {
-        alert("Login failed: " + (result.error));
+        console.error("Login failed: " + (result.error));
       }
     } catch (error) {
-      alert("Error: " + error.message);
+      console.error("Error: " + error.message);
     }
   });
 
@@ -124,13 +148,91 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "/index.php";
       }
       else {
-        alert("Registration failed: " + (result.error));
+        console.error("Registration failed: " + (result.error));
       }
     } catch (error) {
-      alert("Error: " + error.message);
+      console.error("Error: " + error.message);
     }
   });
 });
+
+async function getSessionData() {
+  try {
+    const response = await fetch("/api/getSessionData.php", {
+      method: "POST",
+      credentials: "include"
+    });
+
+    const result = await response.json();
+
+    if (result) {
+      sessionData = result;
+    }
+    else {
+      sessionData = null;
+    }
+  } catch (error) {
+    console.error("Error: " + error.message);
+  }
+}
+
+async function getEvents() {
+  try {
+    const formData = new FormData();
+    formData.append("timelineId", id);
+
+    const response = await fetch("/api/getEvents.php", {
+      method: "POST",
+      credentials: "include",
+      body: formData
+    });
+
+    const result = await response.json();
+
+    if (result && result.success) {
+      return result.data;
+    }
+    else {
+      throw new Error(result.error);
+    }
+  } catch (error) {
+    console.error("Error: " + error.message);
+    return null;
+  }
+}
+
+// Create an event
+async function createEvent(title, time, date, description) {
+  try {
+    let datetime = date+" "+time+":00";
+
+    const formData = new FormData();
+    formData.append("timelineId", id);
+    formData.append("title", title);
+    formData.append("date", datetime);
+    formData.append("description", description);
+
+    const response = await fetch("/api/createEvent.php", {
+      method: "POST",
+      credentials: "include",
+      body: formData
+    });
+
+    const result = await response.json();
+
+    if (result) {
+      if (result.success) {
+        return result.data;
+      }
+
+      throw new Error(result.error);
+    }
+  } catch (error) {
+    console.error("Error: " + error.message);
+  }
+
+  return null;
+}
 
 // Return a new event block with the given informations
 function GetEvent(title, time, date, description) {

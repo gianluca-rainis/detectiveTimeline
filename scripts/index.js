@@ -1,10 +1,32 @@
 const titleTimeline = document.getElementById("titleTimeline");
 const dateTimeline = document.getElementById("dateTimeline");
 
+let isMobileTimelineMenuShowed = false;
+
 document.addEventListener("DOMContentLoaded", async () => {
     addEventForm.style.display = "none";
     
     dateTimeline.value = today;
+
+    // Handle mobile menu for addTimelineForm
+    mobileMenuButton.addEventListener("click", (e) => {
+        e.stopPropagation();
+        
+        isMobileTimelineMenuShowed = !isMobileTimelineMenuShowed;
+
+        if (isMobileTimelineMenuShowed) {
+            addTimelineForm.style.display = "flex";
+            header.style.flexDirection = "column";
+
+            if (isLoginShowed) {
+                toggleLoginSection();
+            }
+        }
+        else {
+            addTimelineForm.style.display = "none";
+            header.style.flexDirection = "row";
+        }
+    });
 
     const timelines = await getTimelines();
 
@@ -55,7 +77,7 @@ async function getTimelines() {
         }
       }
     } catch (error) {
-      alert("Error: " + error.message);
+      console.error("Error: " + error.message);
     }
 
     return timelines;
@@ -84,7 +106,7 @@ async function createTimeline(title, date) {
             throw new Error(result.error);
         }
     } catch (error) {
-        alert("Error: " + error.message);
+        console.error("Error: " + error.message);
     }
 
     return null;
@@ -135,3 +157,23 @@ function GetTimeline(id, title, date) {
     <img src="./images/delete.png" class="delete" />
   </div> */
 }
+
+window.addEventListener("resize", handleTimelineResize);
+handleTimelineResize(); // Initial call
+
+// Handle resize for addTimelineForm visibility
+function handleTimelineResize() {
+    if (window.innerWidth <= 850) {
+        addTimelineForm.style.display = "none";
+        mobileMenuButton.style.display = "block";
+    }
+    else {
+        addTimelineForm.style.display = "flex";
+        mobileMenuButton.style.display = "none";
+
+        if (isMobileTimelineMenuShowed) {
+            isMobileTimelineMenuShowed = false;
+            header.style.flexDirection = "row";
+        }
+    }
+};
