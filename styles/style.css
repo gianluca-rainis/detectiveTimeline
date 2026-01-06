@@ -125,6 +125,13 @@ label {
     form {
         flex-direction: column;
     }
+
+    #loginCreateAccountSection {
+        justify-self: anchor-center;
+        width: 100%;
+        top: 144px;
+        border-radius: 0;
+    }
 }
 
 @media screen and (max-width: 400px) {

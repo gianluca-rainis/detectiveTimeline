@@ -34,8 +34,97 @@ document.addEventListener("DOMContentLoaded", () => {
     orderTimeline(); // Order the events in chronological order
   });
 
-  loginButton.addEventListener("click", toggleLoginSection); // Event listener for the login section
+  loginButton.addEventListener("click", async () => { // Event listener for the login section
+    if (loginButton.src.includes("logout")) {
+      try {
+        await fetch("/api/logout.php", {
+          method: "POST",
+          credentials: "include"
+        });
+
+        window.location.href = "/index.php";
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
+    }
+    else {
+      toggleLoginSection();
+    }
+  });
+
   mobileMenuButton.addEventListener("click", toggleMobileMenu); // Event listener for the mobile menu
+
+  // Toggle login/signup
+  document.getElementById("signUpButton").addEventListener("click", () => {
+    createAccountForm.style.display = "flex";
+    loginForm.style.display = "none";
+  });
+
+  document.getElementById("loginSwitchButton").addEventListener("click", () => {
+    createAccountForm.style.display = "none";
+    loginForm.style.display = "flex";
+  });
+
+  // Handle login form submission
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = loginForm.querySelector('input[type="email"]').value;
+    const password = loginForm.querySelector('input[type="password"]').value;
+
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+
+    try {
+      const response = await fetch("/api/login.php", {
+        method: "POST",
+        credentials: "include",
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        window.location.href = "/index.php";
+      }
+      else {
+        alert("Login failed: " + (result.error));
+      }
+    } catch (error) {
+      alert("Error: " + error.message);
+    }
+  });
+
+  // Handle create account form submission
+  createAccountForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = createAccountForm.querySelector('input[type="email"]').value;
+    const password = createAccountForm.querySelector('input[type="password"]').value;
+
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+
+    try {
+      const response = await fetch("/api/createAccount.php", {
+        method: "POST",
+        credentials: "include",
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        window.location.href = "/index.php";
+      }
+      else {
+        alert("Registration failed: " + (result.error));
+      }
+    } catch (error) {
+      alert("Error: " + error.message);
+    }
+  });
 });
 
 // Return a new event block with the given informations
@@ -127,6 +216,10 @@ function toggleLoginSection() {
 
   if (isLoginShowed) {
     loginCreateAccountSection.style.display = "block";
+
+    if (isMobileMenuShowed) {
+      toggleMobileMenu();
+    }
   }
   else {
     loginCreateAccountSection.style.display = "none";
@@ -140,6 +233,10 @@ function toggleMobileMenu() {
   if (isMobileMenuShowed) {
     addEventForm.style.display = "flex";
     header.style.flexDirection = "column";
+
+    if (isLoginShowed) {
+      toggleLoginSection();
+    }
   }
   else {
     addEventForm.style.display = "none";
