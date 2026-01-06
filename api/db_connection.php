@@ -1,7 +1,7 @@
 <?php
     $host = "localhost";
     $user = "root";
-    $password = "<OMITTED>"; // CHANGE BEFORE RUN
+    $password = ""; // CHANGE BEFORE RUN
     $dbname = "detectiveTimeline";
 
     $conn = new mysqli($host, $user, $password, $dbname);
