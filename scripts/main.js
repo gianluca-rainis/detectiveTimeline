@@ -24,6 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
     time.value = now;
     date.value = today;
     description.value = "";
+
+    orderTimeline();
   });
 
   mobileMenuButton.addEventListener("click", toggleMobileMenu);
@@ -35,7 +37,7 @@ function GetEvent(title, time, date, description) {
 
   const dateToInsert = document.createElement("p");
   dateToInsert.classList = "date";
-  dateToInsert.innerHTML = `${date} - ${time}`;
+  dateToInsert.innerHTML = `${date} | ${time}`;
 
   const titleToInsert = document.createElement("h3");
   titleToInsert.classList = "title";
@@ -62,7 +64,7 @@ function GetEvent(title, time, date, description) {
   
   /* <div class='event'>
     <p className='date'>
-      {date} - {time}
+      {date} | {time}
     </p>
     <h3 class='title'>
       {title}
@@ -72,6 +74,37 @@ function GetEvent(title, time, date, description) {
     </p>
     <img src="./images/delete.png" class="delete" />
   </div> */
+}
+
+function orderTimeline() {
+  const events = document.querySelectorAll(".event");
+  const dates = document.querySelectorAll(".date");
+
+  for (let i = 0; i < events.length; i++) {
+    const thisDate = new Date(dates[i].innerHTML.split(" | ")[0]+" "+dates[i].innerHTML.split(" | ")[1]);
+
+    let minValueIndex = i;
+    
+    for (let j = i+1; j < events.length; j++) {
+      const otherDate = new Date(dates[j].innerHTML.split(" | ")[0]+" "+dates[j].innerHTML.split(" | ")[1]);
+
+      if (otherDate < thisDate) {
+        minValueIndex = j;
+      }
+    }
+
+    let temp = events[i].innerHTML;
+    events[i].innerHTML = events[minValueIndex].innerHTML;
+    events[minValueIndex].innerHTML = temp;
+  }
+
+  const deleteButtons = document.querySelectorAll(".delete");
+
+  deleteButtons.forEach(deleteButton => {
+    deleteButton.addEventListener("click", () => {
+      deleteButton.closest(".event").remove();
+    });
+  });
 }
 
 function toggleMobileMenu() {
