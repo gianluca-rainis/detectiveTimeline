@@ -18,33 +18,40 @@
             throw new Exception("Unauthorized: please log in.");
         }
 
-        $eventId = getInput($_POST['eventId']);
+        $timelineId = getInput($_POST['timelineId']);
 
-        if ($eventId <= 0) {
+        if ($timelineId <= 0) {
             throw new Exception("Invalid event id.");
         }
 
-        // Verify ownership: event must belong to a timeline owned by the session user
-        $sql = "SELECT events.id FROM events INNER JOIN timelines ON events.timelineId=timelines.id WHERE events.id=? AND timelines.accountId=?";
+        // Verify ownership of the timeline
+        $sql = "SELECT id FROM timelines WHERE id=? AND accountId=?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ii", $eventId, $_SESSION['id']);
+        $stmt->bind_param("ii", $timelineId, $_SESSION['id']);
         $stmt->execute();
 
         $result = $stmt->get_result();
 
         if ($result->num_rows === 0) {
-            throw new Exception("Event not found or unauthorized.");
+            throw new Exception("Timeline not found or unauthorized.");
         }
 
         $stmt->close();
 
-        // Delete the event
-        $sql = "DELETE FROM events WHERE id=?";
+        // Delete the events
+        $sql = "DELETE FROM events WHERE timelineId=?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $eventId);
+        $stmt->bind_param("i", $timelineId);
         $stmt->execute();
-
         $stmt->close();
+
+        // Delete the timeline
+        $sql = "DELETE FROM timelines WHERE id=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $timelineId);
+        $stmt->execute();
+        $stmt->close();
+
         $conn->close();
 
         echo json_encode(['success' => true]);

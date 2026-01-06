@@ -112,10 +112,39 @@ async function createTimeline(title, date) {
     return null;
 }
 
+// Delete a timeline
+async function deleteTimeline(id) {
+    try {
+        const formData = new FormData();
+        formData.append("timelineId", id);
+
+        const response = await fetch("/api/deleteTimeline.php", {
+            method: "POST",
+            credentials: "include",
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (result) {
+            if (result.success) {
+                return true;
+            }
+
+            throw new Error(result.error);
+        }
+    } catch (error) {
+        console.error("Error: " + error.message);
+    }
+
+    return false;
+}
+
 // Return a new timeline block with the given informations
 function GetTimeline(id, title, date) {
   const event = document.createElement("div"); // Create the event container
   event.classList = "event";
+  event.dataset.timelineId = id;
 
   const dateToInsert = document.createElement("p"); // Add date
   dateToInsert.classList = "date";
@@ -138,8 +167,12 @@ function GetTimeline(id, title, date) {
   event.appendChild(editTimeline);
   event.appendChild(deleteInsert);
 
-  deleteInsert.addEventListener("click", () => { // Handle the delete button click
-    event.remove();
+  deleteInsert.addEventListener("click", async () => { // Handle the delete button click
+    const isDeleted = await deleteTimeline(event.dataset.timelineId);
+
+    if (isDeleted) {
+        event.remove();
+    }
   });
   
   return event;

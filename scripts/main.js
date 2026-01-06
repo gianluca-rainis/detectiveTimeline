@@ -29,18 +29,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   time.value = now;
   date.value = today;
 
-  const eventsSaved = await getEvents();
+  if (window.location.href.includes("timeline")) {
+    const eventsSaved = await getEvents();
 
-  if (eventsSaved && eventsSaved.length != 0) {
-    eventsSaved.forEach(event => {
-      const hourMinAndSecArray = event.date.split(" ")[1].split(":"); // [hh, mm, ss]
-      const timeStr = hourMinAndSecArray[0] + ":" + hourMinAndSecArray[1]; // hh:mm
-      const dateStr = event.date.split(" ")[0];
+    if (eventsSaved && eventsSaved.length != 0) {
+      eventsSaved.forEach(event => {
+        const hourMinAndSecArray = event.date.split(" ")[1].split(":"); // [hh, mm, ss]
+        const timeStr = hourMinAndSecArray[0] + ":" + hourMinAndSecArray[1]; // hh:mm
+        const dateStr = event.date.split(" ")[0];
 
-      main.appendChild(GetEvent(event.id, event.title, timeStr, dateStr, event.description));
-    });
+        main.appendChild(GetEvent(event.id, event.title, timeStr, dateStr, event.description));
+      });
 
-    orderTimeline();
+      orderTimeline();
+    }
   }
 
   addEventForm.addEventListener("submit", async (e) => { // When added a new event
