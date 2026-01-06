@@ -1,19 +1,38 @@
+const titleTimeline = document.getElementById("titleTimeline");
+const dateTimeline = document.getElementById("dateTimeline");
+
 document.addEventListener("DOMContentLoaded", async () => {
     addEventForm.style.display = "none";
+    
+    dateTimeline.value = today;
 
     const timelines = await getTimelines();
 
-    const addNewTimelineButton = document.createElement("button");
-    addNewTimelineButton.id = "addNewTimeline";
-    addNewTimelineButton.innerHTML = `<img src="./images/add.svg" style="width: 50px;" /> Create a new timeline!`;
-
-    header.appendChild(addNewTimelineButton);
-
     if (timelines.length != 0) {
         timelines.forEach(timeline => {
-            main.appendChild(GetTimeline(timeline.title, timeline.date));
+            main.appendChild(GetTimeline(timeline.id, timeline.title, timeline.date));
         });
     }
+
+    addTimelineForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const titleValue = titleTimeline.value.trim();
+        const dateValue = dateTimeline.value;
+
+        if (titleValue === "") {
+            return;
+        }
+
+        const createdTimeline = await createTimeline(titleValue, dateValue);
+
+        if (createdTimeline) {
+            main.appendChild(GetTimeline(createdTimeline.id, createdTimeline.title, createdTimeline.date));
+
+            titleTimeline.value = "";
+            dateTimeline.value = today;
+        }
+    });
 });
 
 async function getTimelines() {
@@ -42,8 +61,37 @@ async function getTimelines() {
     return timelines;
 }
 
+// Create a timeline
+async function createTimeline(title, date) {
+    try {
+        const formData = new FormData();
+        formData.append("title", title);
+        formData.append("date", date);
+
+        const response = await fetch("/api/createTimeline.php", {
+            method: "POST",
+            credentials: "include",
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (result) {
+            if (result.success) {
+                return result.data;
+            }
+
+            throw new Error(result.error);
+        }
+    } catch (error) {
+        alert("Error: " + error.message);
+    }
+
+    return null;
+}
+
 // Return a new timeline block with the given informations
-function GetTimeline(title, date) {
+function GetTimeline(id, title, date) {
   const event = document.createElement("div"); // Create the event container
   event.classList = "event";
 
@@ -55,12 +103,17 @@ function GetTimeline(title, date) {
   titleToInsert.classList = "title";
   titleToInsert.innerHTML = title;
 
-  const deleteInsert = document.createElement("img"); // Add the delete event button
+  const editTimeline = document.createElement("a"); // Add the edit timeline button
+  editTimeline.href = "./timeline.php?id="+id;
+  editTimeline.innerHTML = `<img src="./images/edit.png" class="editTimeline" />`;
+
+  const deleteInsert = document.createElement("img"); // Add the delete timeline button
   deleteInsert.className = "delete";
   deleteInsert.src = "./images/delete.png";
 
   event.appendChild(dateToInsert);
   event.appendChild(titleToInsert);
+  event.appendChild(editTimeline);
   event.appendChild(deleteInsert);
 
   deleteInsert.addEventListener("click", () => { // Handle the delete button click
@@ -78,6 +131,7 @@ function GetTimeline(title, date) {
     <h3 class='title'>
       {title}
     </h3>
+    <a href="./timeline.php?id={id}"><img src="./images/edit.png" class="editTimeline" /></a>
     <img src="./images/delete.png" class="delete" />
   </div> */
 }

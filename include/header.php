@@ -23,6 +23,19 @@
 
         <input type='submit' value='Add Event' id='submit' />
     </form>
+    <form id='addTimelineForm'>
+        <section>
+            <label for='titleTimeline'>Title</label>
+            <input type='text' id='titleTimeline' required />
+        </section>
+
+        <section>
+            <label for='dateTimeline'>Date</label>
+            <input type='date' id='dateTimeline' disabled />
+        </section>
+
+        <input type='submit' value='Create Timeline' id='submitTimeline' />
+    </form>
     <section id='loginCreateAccountSection' style='display: none;'>
         <form id='loginForm' action='./api/login.php' method='post'>
             <h2>Login</h2>

@@ -1,5 +1,6 @@
 const header = document.querySelector("header");
 const main = document.querySelector("main");
+const addTimelineForm = document.getElementById("addTimelineForm");
 const addEventForm = document.getElementById("addEventForm");
 const loginCreateAccountSection = document.getElementById("loginCreateAccountSection");
 const loginForm = document.getElementById("loginForm");
@@ -17,6 +18,10 @@ let isMobileMenuShowed = false; // If is open the mobile menu
 let isLoginShowed = false; // If is open the login menu
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (window.location.href.includes("timeline")) {
+    addTimelineForm.style.display = "none";
+  }
+
   time.value = now;
   date.value = today;
 
@@ -258,7 +263,7 @@ function handleResize() {
   if (!window.location.href.includes("timeline.php")) {
     return;
   }
-  
+
   if (window.innerWidth <= 850) {
     addEventForm.style.display = "none";
     mobileMenuButton.style.display = "block";

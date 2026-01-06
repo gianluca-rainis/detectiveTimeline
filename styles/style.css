@@ -85,22 +85,14 @@ label {
     text-align: center;
 }
 
-#submit, #loginSubmit {
+#submit, #loginSubmit, #submitTimeline {
     width: 90px;
     height: 50%;
     cursor: pointer;
 }
 
-#addNewTimeline {
-    display: flex;
-    justify-self: center;
-    align-items: center;
-    gap: 20px;
-    border: 0;
-    border-radius: 10px;
-    background-color: #ad7e56;
-    padding: 10px;
-    cursor: pointer;
+#submitTimeline {
+    width: 110px;
 }
 
 .event {
@@ -117,7 +109,7 @@ label {
     margin-right: 40px;
 }
 
-.delete {
+.delete, .editTimeline {
     width: 20px;
     height: 20px;
     cursor: pointer;
@@ -129,7 +121,11 @@ label {
     align-self: center;
 }
 
-.delete:hover, #loginButton:hover, #addNewTimeline:hover {
+.editTimeline {
+    right: 100px;
+}
+
+.delete:hover, .editTimeline:hover, #loginButton:hover {
     background-color: #876343;
 }
 
