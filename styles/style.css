@@ -39,8 +39,34 @@ form section {
     width: 50px;
     height: 50px;
     align-self: center;
-    right: 10%;
+    right: 140px;
     position: fixed;
+}
+
+#loginButton {
+    position: absolute;
+    width: 100px;
+    right: 2%;
+    align-self: center;
+    cursor: pointer;
+    border: 0;
+    border-radius: 10px;
+}
+
+#loginForm, #createAccountForm {
+    flex-direction: column;
+    position: absolute;
+    right: 1px;
+    top: 145px;
+    background-color: #7c3f00;
+    border: 0;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+#signUpButton, #loginSwitchButton {
+    cursor: pointer;
+    color: whitesmoke;
 }
 
 input {
@@ -56,7 +82,7 @@ label {
     text-align: center;
 }
 
-#submit {
+#submit, #loginSubmit {
     width: 90px;
     height: 50%;
     cursor: pointer;
@@ -88,11 +114,11 @@ label {
     align-self: center;
 }
 
-.delete:hover {
+.delete:hover, #loginButton:hover {
     background-color: #876343;
 }
 
-@media screen and (max-width: 740px) {
+@media screen and (max-width: 850px) {
     form {
         flex-direction: column;
     }

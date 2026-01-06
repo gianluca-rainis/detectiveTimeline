@@ -10,6 +10,7 @@ const today = new Date().getFullYear()+"-"+((new Date().getMonth()+1)<10?"0"+(ne
 const now = (new Date().getHours()<10?"0"+new Date().getHours():new Date().getHours())+":"+(new Date().getMinutes()<10?"0"+new Date().getMinutes():new Date().getMinutes());
 
 let isMobileMenuShowed = false; // If is open the mobile menu
+let isLoginShowed = false; // If is open the login menu
 
 document.addEventListener("DOMContentLoaded", () => {
   time.value = now;
@@ -30,6 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   mobileMenuButton.addEventListener("click", toggleMobileMenu); // Event listener for the mobile menu
+
+  // Event listener for the login button
+  document.getElementById("loginButton").addEventListener("click", () => {
+    document.getElementById("loginForm").style.display = "none";
+  });
 });
 
 // Return a new event block with the given informations
@@ -136,7 +142,7 @@ handleResize(); // First call to load the first time
 
 // Handle menu for the screen width
 function handleResize() {
-  if (window.innerWidth <= 740) {
+  if (window.innerWidth <= 850) {
     addEventForm.style.display = "none";
     mobileMenuButton.style.display = "block";
   }
