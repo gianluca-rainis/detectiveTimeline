@@ -9,45 +9,47 @@ const description = document.getElementById("description");
 const today = new Date().getFullYear()+"-"+((new Date().getMonth()+1)<10?"0"+(new Date().getMonth()+1):new Date().getMonth()+1)+"-"+((new Date().getDate()+1)<10?"0"+new Date().getDate():new Date().getDate());
 const now = (new Date().getHours()<10?"0"+new Date().getHours():new Date().getHours())+":"+(new Date().getMinutes()<10?"0"+new Date().getMinutes():new Date().getMinutes());
 
-let isMobileMenuShowed = false;
+let isMobileMenuShowed = false; // If is open the mobile menu
 
 document.addEventListener("DOMContentLoaded", () => {
   time.value = now;
   date.value = today;
 
-  addEventForm.addEventListener("submit", (e) => {
+  addEventForm.addEventListener("submit", (e) => { // When added a new event
     e.preventDefault();
 
-    main.appendChild(GetEvent(title.value, time.value, date.value, description.value));
+    main.appendChild(GetEvent(title.value, time.value, date.value, description.value)); // Insert in the bottom of the main the event
 
+    // Reset the values of the inputs
     title.value = "";
     time.value = now;
     date.value = today;
     description.value = "";
 
-    orderTimeline();
+    orderTimeline(); // Order the events in chronological order
   });
 
-  mobileMenuButton.addEventListener("click", toggleMobileMenu);
+  mobileMenuButton.addEventListener("click", toggleMobileMenu); // Event listener for the mobile menu
 });
 
+// Return a new event block with the given informations
 function GetEvent(title, time, date, description) {
-  const event = document.createElement("div");
+  const event = document.createElement("div"); // Create the event container
   event.classList = "event";
 
-  const dateToInsert = document.createElement("p");
+  const dateToInsert = document.createElement("p"); // Add date
   dateToInsert.classList = "date";
   dateToInsert.innerHTML = `${date} | ${time}`;
 
-  const titleToInsert = document.createElement("h3");
+  const titleToInsert = document.createElement("h3"); // Add title
   titleToInsert.classList = "title";
   titleToInsert.innerHTML = title;
 
-  const descriptionToInsert = document.createElement("p");
+  const descriptionToInsert = document.createElement("p"); // Add the additional informations
   descriptionToInsert.classList = "description";
   descriptionToInsert.innerHTML = description;
 
-  const deleteInsert = document.createElement("img");
+  const deleteInsert = document.createElement("img"); // Add the delete event button
   deleteInsert.className = "delete";
   deleteInsert.src = "./images/delete.png";
 
@@ -56,13 +58,15 @@ function GetEvent(title, time, date, description) {
   event.appendChild(descriptionToInsert);
   event.appendChild(deleteInsert);
 
-  deleteInsert.addEventListener("click", () => {
+  deleteInsert.addEventListener("click", () => { // Handle the delete button click
     event.remove();
   });
   
   return event;
   
-  /* <div class='event'>
+  /* The returned structure
+
+  <div class='event'>
     <p className='date'>
       {date} | {time}
     </p>
@@ -76,14 +80,16 @@ function GetEvent(title, time, date, description) {
   </div> */
 }
 
+// Order the events in chronological order
 function orderTimeline() {
-  const events = document.querySelectorAll(".event");
-  const dates = document.querySelectorAll(".date");
+  const events = document.querySelectorAll(".event"); // Get all the events
+  const dates = document.querySelectorAll(".date"); // Get all the dates
 
+  // Selection sort with Date
   for (let i = 0; i < events.length; i++) {
     const thisDate = new Date(dates[i].innerHTML.split(" | ")[0]+" "+dates[i].innerHTML.split(" | ")[1]);
 
-    let minValueIndex = i;
+    let minValueIndex = i; // Index of the min value found
     
     for (let j = i+1; j < events.length; j++) {
       const otherDate = new Date(dates[j].innerHTML.split(" | ")[0]+" "+dates[j].innerHTML.split(" | ")[1]);
@@ -93,11 +99,13 @@ function orderTimeline() {
       }
     }
 
+    // Update the content of the events
     let temp = events[i].innerHTML;
     events[i].innerHTML = events[minValueIndex].innerHTML;
     events[minValueIndex].innerHTML = temp;
   }
 
+  // Update the event listeners of the delete button (necessary to prevent bugs)
   const deleteButtons = document.querySelectorAll(".delete");
 
   deleteButtons.forEach(deleteButton => {
@@ -107,6 +115,7 @@ function orderTimeline() {
   });
 }
 
+// Toggle the mobile menu (show/hide)
 function toggleMobileMenu() {
   isMobileMenuShowed = !isMobileMenuShowed;
 
@@ -120,10 +129,12 @@ function toggleMobileMenu() {
   }
 }
 
+// On resize of the page update
 window.addEventListener("resize", handleResize);
 
-handleResize();
+handleResize(); // First call to load the first time
 
+// Handle menu for the screen width
 function handleResize() {
   if (window.innerWidth <= 740) {
     addEventForm.style.display = "none";
