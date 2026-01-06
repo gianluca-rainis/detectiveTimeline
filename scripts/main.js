@@ -228,6 +228,10 @@ function toggleLoginSection() {
 
 // Toggle the mobile menu (show/hide)
 function toggleMobileMenu() {
+  if (!window.location.href.includes("timeline.php")) {
+    return;
+  }
+
   isMobileMenuShowed = !isMobileMenuShowed;
 
   if (isMobileMenuShowed) {
@@ -251,6 +255,10 @@ handleResize(); // First call to load the first time
 
 // Handle menu for the screen width
 function handleResize() {
+  if (!window.location.href.includes("timeline.php")) {
+    return;
+  }
+  
   if (window.innerWidth <= 850) {
     addEventForm.style.display = "none";
     mobileMenuButton.style.display = "block";

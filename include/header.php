@@ -1,27 +1,27 @@
 <header>
     <section style="display: flex;">
-        <a href="./index.html"><img src="./images/logo.png" id="logo" /></a>
+        <a href="./index.php"><img src="./images/logo.png" id="logo" /></a>
         <img src="./images/menu.png" id="mobileMenuButton" />
         <img src=<?php echo isset($_SESSION['id'])&&!empty($_SESSION['id'])?"./images/logout.png":"./images/login.png" ?> id="loginButton" />
     </section>
     <form id='addEventForm'>
         <section>
-            <label for="title">Title</label>
+            <label for='title'>Title</label>
             <input type='text' id='title' required />
         </section>
 
         <section>
-            <label for="date">Date</label>
+            <label for='date'>Date</label>
             <input type='time' id='time' required />
             <input type='date' id='date' required />
         </section>
 
         <section>
-            <label for="description">Additional informations</label>
+            <label for='description'>Additional informations</label>
             <input type='text' id='description' />
         </section>
 
-        <input type='submit' value="Add Event" id="submit" />
+        <input type='submit' value='Add Event' id='submit' />
     </form>
     <section id='loginCreateAccountSection' style='display: none;'>
         <form id='loginForm' action='./api/login.php' method='post'>

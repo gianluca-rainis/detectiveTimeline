@@ -17,10 +17,9 @@
             include("./include/header.php");
         ?>
         <main>
-            
+
         </main>
 
         <script src="/scripts/main.js"></script>
-        <script src="/scripts/index.js"></script>
     </body>
 </html>
